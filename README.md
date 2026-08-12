@@ -10,11 +10,11 @@ El repositorio actúa como la fuente de verdad del sistema: toda la planificaci�
 
 # Primeros pasos
 
+Para entender cómo se usa el harness en el día a día (aprobar planificaciones, continuar una sesión interrumpida, preguntas frecuentes), consulta **`docs/usage.md`**.
+
 1. Copia los archivos del harness (`AGENTS.md`, `docs/`, `agents/`, `init.sh`) dentro de tu proyecto.
 2. Ejecuta `./init.sh` para verificar el harness e inicializar `specs/` y `progress/`.
 3. Empieza a hablar con el agente describiendo lo que necesitas — actuará como Leader y coordinará el resto.
-
-Para entender cómo se usa el harness en el día a día (aprobar planificaciones, continuar una sesión interrumpida, preguntas frecuentes), consulta **`docs/usage.md`**.
 
 ---
 
