@@ -172,9 +172,39 @@ echo "[INFO] Los comandos deben coincidir con docs/project/verification.md."
 # Usa run_check para que cualquier fallo se propague correctamente a $EXIT_CODE.
 # El Reviewer exige que init.sh finalice sin errores antes de aprobar un Work Item,
 # así que un comando de verificación que falle DEBE marcar el harness como fallido.
+run_with_spinner() {
+    local pid="$1"
+    local message="$2"
+    local frames='|/-\'
+    local frame_index=0
+    local status=0
+
+    while kill -0 "$pid" 2>/dev/null; do
+        printf '\r\033[2K[%s] %s' "${frames:frame_index:1}" "$message"
+        frame_index=$(( (frame_index + 1) % ${#frames} ))
+        sleep 0.1
+    done
+
+    wait "$pid" || status=$?
+    printf '\r\033[2K'
+    return "$status"
+}
+
 run_check() {
     local desc="$1"; shift
-    if "$@" > /dev/null 2>&1; then
+
+    if [[ -t 1 ]]; then
+        "$@" > /dev/null 2>&1 &
+        local pid=$!
+
+        if run_with_spinner "$pid" "$desc"; then
+            ok "$desc"
+        else
+            fail "$desc"
+            EXIT_CODE=1
+            FAILED_CHECKS+=("$desc")
+        fi
+    elif "$@" > /dev/null 2>&1; then
         ok "$desc"
     else
         fail "$desc"
@@ -194,7 +224,6 @@ run_check() {
 #
 # run_check "Tests" cargo test
 #
-
 echo
 
 ###########################################################
