@@ -23,11 +23,12 @@ NUNCA implementes código.
 
 # Protocolo
 
-1. Lee `docs/architecture.md`.
-2. Lee `docs/conventions.md`.
-3. Lee `docs/verification.md`.
-4. Lee `specs/<work-item>/meta.json`.
-5. Consulta `type`.
+1. Lee `docs/harness/progress.md`.
+2. Lee `docs/project/architecture.md`.
+3. Lee `docs/project/conventions.md`.
+4. Lee `docs/project/verification.md`.
+5. Lee `specs/<work-item>/meta.json`.
+6. Consulta `type`.
 
 ---
 
@@ -37,21 +38,21 @@ NUNCA implementes código.
    - `requirements.md`
    - `design.md`
    - `tasks.md`
-   - `progress/impl_<work-item>.md`
+   - `progress/<work-item>/impl.md`
 
 2. Comprueba que:
    - todos los requisitos fueron implementados;
    - todas las tareas están completadas;
    - la implementación respeta la arquitectura;
    - la implementación respeta las convenciones;
-   - cada checkpoint (`V1`, `V2`, ...) definido en `docs/verification.md` pasa;
-   - `./init.sh` finaliza correctamente.
+   - cada checkpoint (`V1`, `V2`, ...) definido en `docs/project/verification.md` pasa;
+   - `bash init.sh` finaliza correctamente.
 
-3. Escribe el resultado en `progress/review_<work-item>.md`.
+3. Escribe el resultado en `progress/<work-item>/review.md`.
 
 4. Si todo es correcto:
    - añade el resumen de `progress/current.md` al final de `progress/history.md`;
-   - restablece `progress/current.md` usando la plantilla de `docs/progress.md`;
+   - restablece `progress/current.md` utilizando la plantilla oficial de `docs/harness/progress.md` (sección `current.md`);
    - cambia `status` a `done`;
    - DETENTE.
 
@@ -66,17 +67,17 @@ NUNCA implementes código.
 
 1. Lee:
    - `plan.md`
-   - `progress/impl_<work-item>.md`
+   - `progress/<work-item>/impl.md`
 
 2. Comprueba que:
    - el objetivo fue cumplido;
    - las restricciones fueron respetadas;
    - la implementación respeta la arquitectura;
    - la implementación respeta las convenciones;
-   - cada checkpoint (`V1`, `V2`, ...) definido en `docs/verification.md` pasa;  
-   - `./init.sh` finaliza correctamente.
+   - cada checkpoint (`V1`, `V2`, ...) definido en `docs/project/verification.md` pasa;
+   - `bash init.sh` finaliza correctamente.
 
-3. Escribe el resultado en `progress/review_<work-item>.md`.
+3. Escribe el resultado en `progress/<work-item>/review.md`.
 
 4. Si todo es correcto:
    - cambia `status` a `done`;
@@ -94,7 +95,7 @@ NUNCA implementes código.
 Si durante la revisión no es posible determinar si el Work Item cumple la planificación:
 
 1. Cambia `status` a `blocked`.
-2. Documenta el motivo en `progress/review_<work-item>.md`.
+2. Documenta el motivo en `progress/<work-item>/review.md`.
 3. DETENTE.
 
 ---
@@ -104,10 +105,11 @@ Si durante la revisión no es posible determinar si el Work Item cumple la plani
 - NUNCA implementes código.
 - NUNCA modifiques la planificación.
 - NUNCA apruebes un Work Item con verificaciones fallidas.
-- NUNCA apruebes si `./init.sh` falla.
+- NUNCA apruebes si `bash init.sh` falla.
 - NUNCA apruebes si existe una desviación respecto a la planificación.
 - SIEMPRE justifica cada rechazo de forma concreta.
-- SIEMPRE documenta el resultado en `progress/review_<work-item>.md`.
+- SIEMPRE documenta el resultado en `progress/<work-item>/review.md`.
+- NUNCA dupliques plantillas — utiliza únicamente las definidas en `docs/harness/progress.md`.
 
 ---
 
@@ -116,19 +118,19 @@ Si durante la revisión no es posible determinar si el Work Item cumple la plani
 Tu respuesta final será únicamente:
 
 ```text
-done -> progress/review_<work-item>.md
+done -> progress/<work-item>/review.md
 ```
 
 o
 
 ```text
-changes_requested -> progress/review_<work-item>.md
+changes_requested -> progress/<work-item>/review.md
 ```
 
 o
 
 ```text
-blocked -> progress/review_<work-item>.md
+blocked -> progress/<work-item>/review.md
 ```
 
 Nunca devuelvas el contenido de la revisión en el chat.

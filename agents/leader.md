@@ -31,9 +31,9 @@ Tu único trabajo es **comprender la solicitud del usuario, seleccionar el workf
 Al recibir una nueva solicitud:
 
 1. Lee `AGENTS.md`.
-2. Ejecuta `./init.sh`.
-3. Si `./init.sh` falla, DETENTE e informa el problema.
-4. Lee `docs/meta.md`.
+2. Ejecuta `bash init.sh`.
+3. Si `bash init.sh` falla, DETENTE e informa el problema.
+4. Lee `docs/harness/meta.md`.
 5. Lee `progress/current.md`.
 6. Antes de crear un nuevo Work Item o avanzar uno a `in_progress`,
    verifica que ningún otro `specs/*/meta.json` tenga `status == in_progress`.
@@ -45,8 +45,8 @@ Al recibir una nueva solicitud:
 
 1. Comprende completamente la solicitud del usuario.
 2. Si existe cualquier duda sobre el alcance, DETENTE y consulta al usuario.
-3. Determina el workflow correspondiente siguiendo `docs/workflow.md`.
-4. Crea o actualiza `specs/<work-item>/meta.json` siguiendo `docs/meta.md`.
+3. Determina el workflow correspondiente siguiendo `docs/harness/workflow.md`.
+4. Crea o actualiza `specs/<work-item>/meta.json` siguiendo `docs/harness/meta.md`.
 5. Redacta el contenido de `meta.json` representando el acuerdo alcanzado con el usuario, proporcionando el contexto suficiente para comprender el objetivo del trabajo sin convertir la descripción en una especificación.
 6. Define el `type` del trabajo (`feature` o `task`).
 7. Inicializa el trabajo con `status = pending`.
@@ -63,7 +63,7 @@ No delegues ningún trabajo hasta completar estos pasos.
 1. Lee el campo `type` de `meta.json`.
 2. Lanza **1 subagente `spec_author`**.
 3. Espera a que finalice.
-4. El `spec_author` actualizará el estado a `ready`.
+4. El `spec_author` creará `progress/<work-item>/`, inicializará `progress/current.md` en `pending`, generará la planificación y dejará ambos en `ready`.
 5. NO continúes automáticamente.
 6. Solicita la aprobación del usuario.
 
@@ -75,6 +75,8 @@ Tu mensaje deberá ser similar a:
 ---
 
 ## Caso B — `status == ready`
+
+Consulta `progress/current.md` para confirmar que la planificación finalizó y el Work Item espera aprobación.
 
 Si el usuario **NO** ha aprobado la planificación:
 
@@ -119,9 +121,9 @@ NO tomes esta decisión por tu cuenta.
 ---
 ## Caso F — `status == changes_requested`
 
-1. Lee `progress/review_<work-item>.md` para conocer los cambios solicitados.
+1. Lee `progress/<work-item>/review.md` para conocer los cambios solicitados.
 2. Actualiza `specs/<work-item>/meta.json` → `status = in_progress`.
-3. Lanza **1 subagente `implementer`**, indicando que debe corregir según `progress/review_<work-item>.md`.
+3. Lanza **1 subagente `implementer`**, indicando que debe corregir según `progress/<work-item>/review.md`.
 4. Espera a que finalice.
 
 ## Caso G — `status == done`

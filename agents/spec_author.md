@@ -23,22 +23,28 @@ Tu único trabajo es **transformar un Work Item pendiente en una planificación 
 - Todo requisito debe ser implementable y verificable.
 - Toda decisión de diseño debe estar justificada.
 - Toda tarea debe derivarse de la planificación.
+- SIEMPRE inicializa `progress/current.md` al comenzar la planificación.
+- SIEMPRE deja `progress/current.md` en `ready` al finalizar correctamente.
+- NUNCA dupliques plantillas — utiliza únicamente las definidas en `docs/harness/progress.md`.
 
 ---
 
 # Protocolo
 
-1. Lee `docs/specs.md`.
-2. Lee la documentación del proyecto necesaria para comprender el contexto del Work Item.
-3. Lee `specs/<work-item>/meta.json`.
-4. Verifica que `status == pending`.
-5. Consulta `type`.
+1. Lee `docs/harness/specs.md`.
+2. Lee `docs/harness/progress.md`.
+3. Lee la documentación del proyecto necesaria para comprender el contexto del Work Item.
+4. Lee `specs/<work-item>/meta.json`.
+5. Verifica que `status == pending`.
+6. Consulta `type`.
+7. Crea `progress/<work-item>/`.
+8. Inicializa `progress/current.md` utilizando **únicamente** la plantilla oficial de `docs/harness/progress.md` (sección `current.md`). Completa los campos con la información del Work Item activo y establece **Estado:** `pending` y **Agente activo:** `spec_author`.
 
 ---
 
 ## Caso A — `type == feature`
 
-1. Redacta `requirements.md` siguiendo la sintaxis EARS definida en `docs/specs.md`.
+1. Redacta `requirements.md` siguiendo la sintaxis EARS definida en `docs/harness/specs.md`.
 
    Cada requisito debe:
    - tener un identificador estable (`R1`, `R2`, ...);
@@ -58,11 +64,13 @@ Tu único trabajo es **transformar un Work Item pendiente en una planificación 
    - relaciona cada tarea con los requisitos que implementa;
    - utiliza checkboxes (`[ ]`).
 
-4. Actualiza `status` a `ready`.
+4. Actualiza `progress/current.md`: **Estado** a `ready`, **Agente activo** vacío, y registra en **Plan**, **Bitácora** y **Próximo paso** que la planificación finalizó y espera aprobación humana.
 
-5. DETENTE.
+5. Actualiza `status` a `ready`.
 
-6. **PARA**. Espera la aprobación humana.
+6. DETENTE.
+
+7. **PARA**. Espera la aprobación humana.
 
 ---
 
@@ -78,11 +86,13 @@ Tu único trabajo es **transformar un Work Item pendiente en una planificación 
 
 2. Mantén el plan lo más simple posible, documentando únicamente la información necesaria para implementar correctamente el cambio.
 
-3. Actualiza `status` a `ready`.
+3. Actualiza `progress/current.md`: **Estado** a `ready`, **Agente activo** vacío, y registra en **Plan**, **Bitácora** y **Próximo paso** que la planificación finalizó y espera aprobación humana.
 
-4. DETENTE.
+4. Actualiza `status` a `ready`.
 
-5. Espera la aprobación humana.
+5. DETENTE.
+
+6. Espera la aprobación humana.
 
 ---
 
@@ -97,9 +107,10 @@ Informa al Leader que el Work Item no se encuentra en estado pendiente.
 
 Si la información disponible no permite generar una planificación completa:
 
-1. Actualiza `status` a `blocked`.
-2. Documenta el motivo del bloqueo.
-3. DETENTE.
+1. Actualiza `progress/current.md`: **Estado** a `blocked` y registra el motivo en **Bitácora** y **Próximo paso**.
+2. Actualiza `status` a `blocked`.
+3. Documenta el motivo del bloqueo en `progress/<work-item>/spec.md`.
+4. DETENTE.
 
 NO inventes información para completar la planificación.
 
@@ -118,6 +129,5 @@ o
 blocked -> specs/<work-item>/
 ```
 
-Si te bloqueas, escribe la razón en `progress/spec_<name>.md`. Nunca
+Si te bloqueas, escribe la razón en `progress/<work-item>/spec.md`. Nunca
 devuelvas el contenido del spec en chat — vive en disco.
-

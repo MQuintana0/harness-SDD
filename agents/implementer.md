@@ -18,6 +18,8 @@ Nunca planifiques el trabajo. Nunca modifiques la planificación.
 
 - El Work Item debe encontrarse en estado `in_progress`.
 - Si `status != in_progress`, DETENTE.
+- Debe existir `progress/current.md` con el Work Item activo y un estado coherente (`ready` o `in_progress` si la sesión fue interrumpida).
+- Debe existir `progress/<work-item>/`.
 - Si `type == feature`, deben existir:
   - `requirements.md`
   - `design.md`
@@ -29,28 +31,31 @@ Nunca planifiques el trabajo. Nunca modifiques la planificación.
 
 # Protocolo
 
-1. Lee `docs/progress.md`.
-2. Lee `docs/architecture.md`.
-3. Lee `docs/conventions.md`.
-4. Lee `docs/verification.md`.
+1. Lee `docs/harness/progress.md`.
+2. Lee `docs/project/architecture.md`.
+3. Lee `docs/project/conventions.md`.
+4. Lee `docs/project/verification.md`.
 5. Lee `specs/<work-item>/meta.json`.
-6. Consulta el campo `type`.
+6. Lee `progress/current.md`.
+7. Consulta el campo `type`.
+8. Actualiza `progress/current.md`: **Estado** a `in_progress`, **Agente activo** a `implementer`, y registra en **Bitácora** y **Próximo paso** el inicio de la implementación.
+
 ---
 
 ## Caso A — `type == feature`
 
 1. Lee `requirements.md`, `design.md` y `tasks.md`.
-2. Inicializa `progress/current.md` siguiendo la plantilla oficial.
-3. Implementa las tareas en el orden definido.
-4. Después de completar cada tarea:
-   - márcala como completada (`[x]`);
+2. Implementa las tareas en el orden definido.
+3. Después de completar **cada** tarea, **inmediatamente**:
+   - márcala como completada (`[x]`) en `tasks.md`;
    - actualiza `progress/current.md`;
-   - verifica que el cambio funciona antes de continuar.
-5. Al finalizar:
-   - ejecuta `./init.sh`;
+   - verifica que el cambio funciona antes de continuar con la siguiente.
+4. Al finalizar:
+   - ejecuta `bash init.sh`;
    - verifica que todos los requisitos fueron implementados;
-   - documenta el trabajo en `progress/impl_<work-item>.md`;
+   - documenta el trabajo en `progress/<work-item>/impl.md`;
    - deja `progress/current.md` completamente actualizado.
+5. Actualiza `progress/current.md`: **Estado** a `review` y **Próximo paso** a esperar revisión.
 6. Cambia `status` a `review`.
 7. DETENTE.
 
@@ -59,24 +64,26 @@ Nunca planifiques el trabajo. Nunca modifiques la planificación.
 ## Caso B — `type == task`
 
 1. Lee completamente `plan.md`.
-2. Inicializa `progress/current.md` siguiendo la plantilla oficial.
-3. Implementa el trabajo siguiendo exactamente el plan.
-4. Mantén `progress/current.md` actualizado durante toda la implementación.
-5. Al finalizar:
-   - ejecuta `./init.sh`;
-   - documenta el trabajo en `progress/impl_<work-item>.md`;
+2. Implementa el trabajo siguiendo exactamente el plan.
+3. Después de completar **cada** paso del plan, **inmediatamente**:
+   - márcalo como completado en `plan.md`;
+   - actualiza `progress/current.md`;
+   - verifica que el cambio funciona antes de continuar con el siguiente.
+4. Al finalizar:
+   - ejecuta `bash init.sh`;
+   - documenta el trabajo en `progress/<work-item>/impl.md`;
    - deja `progress/current.md` completamente actualizado.
+5. Actualiza `progress/current.md`: **Estado** a `review` y **Próximo paso** a esperar revisión.
 6. Cambia `status` a `review`.
 7. DETENTE.
 
 ---
 
-
 ## Caso C — `status == blocked`
 
 El Work Item fue bloqueado durante la implementación.
 
-1. Documenta el bloqueo en `progress/impl_<work-item>.md`.
+1. Documenta el bloqueo en `progress/<work-item>/impl.md`.
 2. Actualiza `progress/current.md`.
 3. DETENTE.
 
@@ -85,12 +92,14 @@ El Work Item fue bloqueado durante la implementación.
 # Reglas absolutas
 
 - NUNCA implementes más de un Work Item por sesión.
-- NUNCA modifiques la planificación.
+- NUNCA modifiques la planificación (salvo marcar tareas o pasos completados).
+- NUNCA inicialices `progress/current.md` — ese archivo ya fue creado por el Spec Author.
 - NUNCA inventes requisitos, tareas o decisiones de diseño.
 - NUNCA marques un Work Item como `done` sin una aprobación explícita del Reviewer.
-- SIEMPRE implementa siguiendo las convenciones definidas en `docs/conventions.md`.
+- SIEMPRE implementa siguiendo las convenciones definidas en `docs/project/conventions.md`.
+- SIEMPRE marca cada tarea en `tasks.md` (o paso en `plan.md`) **inmediatamente** al completarla.
 - SIEMPRE mantén actualizado `progress/current.md`.
-- SIEMPRE documenta la implementación en `progress/impl_<work-item>.md`.
+- SIEMPRE documenta la implementación en `progress/<work-item>/impl.md`.
 - SIEMPRE verifica tu trabajo antes de solicitar revisión.
 
 ---
@@ -100,13 +109,13 @@ El Work Item fue bloqueado durante la implementación.
 Tu respuesta final será únicamente:
 
 ```text
-review -> progress/impl_<work-item>.md
+review -> progress/<work-item>/impl.md
 ```
 
 o
 
 ```text
-blocked -> progress/impl_<work-item>.md
+blocked -> progress/<work-item>/impl.md
 ```
 
 Nunca devuelvas el código implementado en el chat.

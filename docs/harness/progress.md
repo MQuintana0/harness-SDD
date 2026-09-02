@@ -5,6 +5,8 @@
 > La carpeta `progress/` constituye el registro vivo del estado de desarrollo y permite que cualquier agente o persona pueda comprender qué ocurrió durante una sesión, retomarla si fue interrumpida y consultar el historial del proyecto.
 >
 > Ningún agente debe inventar nuevos formatos. Todos los archivos de `progress/` deben respetar las plantillas descritas en este documento.
+>
+> **Este documento es la única fuente de verdad** para plantillas y estructura. Los agentes deben leerlo y aplicarlo directamente — nunca dupliques formatos en otros archivos.
 
 ---
 
@@ -13,15 +15,20 @@
 ```text
 progress/
 │
-├── current.md
-├── history.md
-├── impl_<work-item>.md
-├── review_<work-item>.md
-└── spec_<work-item>.md (solo cuando existe un bloqueo)
+├── current.md              # Sesión activa (único Work Item en curso)
+├── history.md              # Bitácora histórica (append-only)
+│
+└── <work-item>/            # Documentos generados por los agentes
+    ├── impl.md             # Reporte del Implementer
+    ├── review.md           # Reporte del Reviewer
+    └── spec.md             # Bloqueo del Spec Author (solo si aplica)
 ```
 
----
+Los archivos de sesión (`current.md`, `history.md`) viven en la raíz de `progress/`.
 
+Cada Work Item tiene su propia carpeta `progress/<work-item>/`, análoga a `specs/<work-item>/`, donde se concentran todos los documentos generados durante su ciclo de vida.
+
+---
 
 # current.md
 
@@ -30,12 +37,15 @@ Representa el estado **actual** de la sesión.
 > Esta plantilla también está embebida como heredoc en `init.sh` (Sección 2).
 > Si la modificas aquí, actualiza también el script para mantenerlas sincronizadas.
 
+El **Spec Author** lo inicializa al comenzar la planificación (`pending`) y lo deja en `ready` al terminar, esperando aprobación humana.
 
-Debe mantenerse actualizado durante toda la ejecución del Work Item.
+El **Implementer** lo actualiza al iniciar la implementación (`in_progress`) y lo mantiene durante toda la ejecución hasta pasar a `review`.
+
+Debe mantenerse actualizado durante todo el ciclo de vida del Work Item — desde `pending` hasta `review`.
 
 No debe rellenarse únicamente al finalizar el trabajo.
 
-Su propósito es permitir que una sesión pueda retomarse en cualquier momento.
+Su propósito es permitir que una sesión pueda retomarse en cualquier momento, incluso durante la planificación o la espera de aprobación.
 
 Debe utilizar siempre la siguiente plantilla:
 
@@ -74,7 +84,6 @@ Es la bitácora histórica del proyecto.
 > Esta plantilla también está embebida como heredoc en `init.sh` (Sección 2).
 > Si la modificas aquí, actualiza también el script para mantenerlas sincronizadas.
 
-
 Su contenido es **append-only**.
 
 Nunca deben modificarse entradas anteriores.
@@ -105,9 +114,9 @@ Cada entrada debe resumir:
 
 ---
 
-# impl_<work-item>.md
+# progress/<work-item>/impl.md
 
-Documento generado por el **Implementer**.
+Documento generado por el **Implementer** en `progress/<work-item>/impl.md`.
 
 Describe el trabajo realizado durante la implementación.
 
@@ -123,13 +132,14 @@ Este archivo constituye la evidencia principal para la revisión.
 
 ---
 
-# review_<work-item>.md
+# progress/<work-item>/review.md
 
-Documento generado por el **Reviewer**.
+Documento generado por el **Reviewer** en `progress/<work-item>/review.md`.
 
 Resume el resultado de la revisión realizada sobre el Work Item.
 
 Debe incluir como mínimo:
+
 - estado final (`done`, `changes_requested` o `blocked`);
 - verificaciones realizadas;
 - observaciones;
@@ -137,7 +147,7 @@ Debe incluir como mínimo:
 
 ---
 
-# spec_<work-item>.md
+# progress/<work-item>/spec.md
 
 Documento generado únicamente cuando el **Spec Author** no puede completar correctamente la planificación.
 
@@ -155,17 +165,19 @@ Si no existen bloqueos, este archivo no debe crearse.
 
 | Archivo | Responsable |
 |----------|-------------|
-| `current.md` | Implementer |
+| `current.md` (inicialización: `pending` → `ready`) | Spec Author |
+| `current.md` (implementación: `in_progress` → `review`) | Implementer |
 | `history.md` | Reviewer |
-| `impl_<work-item>.md` | Implementer |
-| `review_<work-item>.md` | Reviewer |
-| `spec_<work-item>.md` | Spec Author |
+| `<work-item>/impl.md` | Implementer |
+| `<work-item>/review.md` | Reviewer |
+| `<work-item>/spec.md` | Spec Author |
 
 ---
 
 # Reglas
 
-- Mantén `current.md` actualizado durante toda la sesión.
+- Mantén `current.md` actualizado durante todo el ciclo de vida del Work Item.
+- Crea `progress/<work-item>/` al iniciar el trabajo sobre un Work Item.
 - Nunca sobrescribas el historial.
 - No elimines documentación existente.
 - Utiliza siempre las plantillas definidas en este documento.

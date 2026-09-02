@@ -13,7 +13,7 @@ El repositorio actúa como la fuente de verdad del sistema: toda la planificaci�
 Para entender cómo se usa el harness en el día a día (aprobar planificaciones, continuar una sesión interrumpida, preguntas frecuentes), consulta **`docs/usage.md`**.
 
 1. Copia los archivos del harness (`AGENTS.md`, `docs/`, `agents/`, `init.sh`) dentro de tu proyecto.
-2. Ejecuta `./init.sh` para verificar el harness e inicializar `specs/` y `progress/`.
+2. Ejecuta `bash init.sh` para verificar el harness e inicializar `specs/` y `progress/`.
 3. Empieza a hablar con el agente describiendo lo que necesitas — actuará como Leader y coordinará el resto.
 
 ---
@@ -88,7 +88,7 @@ Finalización
 
 El código nunca se implementa antes de existir una planificación aprobada.
 
-> Este diagrama muestra la ruta principal. Las ramificaciones (rechazo en revisión, bloqueos) están documentadas en `docs/workflow.md`.
+> Este diagrama muestra la ruta principal. Las ramificaciones (rechazo en revisión, bloqueos) están documentadas en `docs/harness/workflow.md`.
 
 > El tramo `Usuario → Leader → meta.json` representa una negociación explícita, no una conversión automática — ver `docs/usage.md` (para el usuario) o `agents/leader.md` (protocolo del agente).
 
@@ -115,14 +115,16 @@ La aprobación humana forma parte del workflow y nunca puede omitirse.
 ├── init.sh                       # Inicialización y verificación del entorno
 │
 ├── docs/
-│   ├── architecture.md           # Principios de arquitectura
-│   ├── conventions.md            # Convenciones del proyecto
-│   ├── meta.md                   # Estructura de meta.json
-│   ├── progress.md               # Sistema de progreso
-│   ├── specs.md                  # Spec Driven Development
 │   ├── usage.md                  # Guía de uso para humanos
-│   ├── verification.md           # Reglas de verificación
-│   └── workflow.md               # Workflow del harness
+│   ├── harness/                 # Documentación del arnés (no personalizar)
+│   │   ├── workflow.md           # Reglas de verificación
+│   │   ├── specs.md              # Spec Driven Development
+│   │   ├── progress.md           # Sistema de progreso
+│   │   └── meta.md               # Sistema de progreso
+│   └── project/                 # Documentación del proyecto (personalizar)
+│       ├── architecture.md       # Principios de arquitectura
+│       ├── conventions.md        # Convenciones del proyecto
+│       └── verification.md       # Reglas de verificación
 │
 ├── specs/
 │   └── <work-item>/
@@ -135,9 +137,10 @@ La aprobación humana forma parte del workflow y nunca puede omitirse.
 ├── progress/
 │   ├── current.md                # Estado de la sesión actual
 │   ├── history.md                # Historial de sesiones
-│   ├── impl_<work-item>.md       # Reporte del Implementer
-│   ├── review_<work-item>.md     # Reporte del Reviewer
-│   └── spec_<work-item>.md       # Reporte de bloqueo del Spec Author (solo si aplica)
+│   └── <work-item>/              # Documentos generados por los agentes
+│       ├── impl.md               # Reporte del Implementer
+│       ├── review.md             # Reporte del Reviewer
+│       └── spec.md               # Bloqueo del Spec Author (solo si aplica)
 │
 ├── agents/
 │   ├── leader.md
@@ -155,26 +158,38 @@ La aprobación humana forma parte del workflow y nunca puede omitirse.
 
 El harness trabaja sobre **Work Items**. Existen dos tipos, **Feature** y **Task**, según el nivel de planificación que requiere el cambio.
 
-Los criterios para elegir entre uno y otro, así como los estados y transiciones que sigue cada Work Item, están definidos en `docs/workflow.md`.
+Los criterios para elegir entre uno y otro, así como los estados y transiciones que sigue cada Work Item, están definidos en `docs/harness/workflow.md`.
 
 ---
 
 # Documentación
 
-La documentación está desacoplada por responsabilidad.
+La documentación está dividida en dos grupos según quién debe modificarla y desacoplada por responsabilidad.
+
+## Documentación del harness (`docs/harness/`)
+
+Define el funcionamiento del arnés. **No requiere personalización** al adaptarlo a un proyecto.
 
 | Documento | Propósito |
 |-----------|-----------|
-| workflow.md | Flujo completo del harness: tipos de Work Item, estados y transiciones. |
-| specs.md | Cómo se construyen las especificaciones. |
-| architecture.md | Principios de arquitectura del proyecto. |
-| conventions.md | Convenciones de desarrollo. |
-| verification.md | Reglas de validación del trabajo. |
-| progress.md | Funcionamiento del sistema de progreso. |
-| meta.md | Estructura y significado de `meta.json`. |
+| `workflow.md` | Flujo completo: tipos de Work Item, estados y transiciones. |
+| `specs.md` | Cómo se construyen las especificaciones. |
+| `progress.md` | Funcionamiento del sistema de progreso. |
+| `meta.md` | Estructura y significado de `meta.json`. |
 
+## Documentación del proyecto (`docs/project/`)
 
-Los agentes únicamente cargan la documentación necesaria para su etapa.
+Describe las reglas de **tu repositorio**. **Debes personalizarla** al implementar el harness por primera vez.
+
+| Documento | Propósito |
+|-----------|-----------|
+| `architecture.md` | Principios de arquitectura del proyecto. |
+| `conventions.md` | Convenciones de desarrollo. |
+| `verification.md` | Checkpoints y reglas de validación. |
+
+También personaliza las secciones 2 y 3 de `AGENTS.md` (propósito y stack) y la Sección 4 de `init.sh` (comandos de verificación).
+
+Los agentes cargan únicamente la documentación necesaria para su etapa.
 
 ---
 
@@ -188,10 +203,9 @@ progress/
 
 contiene:
 
-- sesión actual
-- historial
-- reportes de implementación
-- revisiones
+- sesión actual (`current.md`)
+- historial (`history.md`)
+- carpeta por Work Item (`<work-item>/`) con reportes de implementación, revisión y bloqueos
 
 Esto permite:
 

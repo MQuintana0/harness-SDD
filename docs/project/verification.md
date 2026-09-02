@@ -1,5 +1,7 @@
 # Verification
 
+> **Documento del proyecto** — personaliza este archivo al adaptar el harness a tu repositorio.
+>
 > Este documento define cómo se verifica que un Work Item ha sido implementado correctamente.
 >
 > El objetivo no es indicar **qué** se implementó, sino **cómo demostrar que funciona**.
@@ -50,7 +52,7 @@ Como mínimo, por cada checkpoint ejecutado:
 La evidencia debe documentarse en:
 
 ```
-progress/impl_<work-item>.md
+progress/<work-item>/impl.md
 ```
 
 ---

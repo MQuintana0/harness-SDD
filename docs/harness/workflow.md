@@ -93,6 +93,8 @@ El flujo es el mismo para Features y Tasks — únicamente cambia la planificaci
 
 pending → spec_author → ready → ⏸ aprobación humana → in_progress → implementer → review → reviewer → done
 
+Durante todo el flujo, `progress/current.md` refleja el estado vivo del Work Item: el **Spec Author** lo inicializa en `pending` y lo deja en `ready`; el **Implementer** lo actualiza en `in_progress` y `review`. Los reportes de cada agente se almacenan en `progress/<work-item>/`.
+
 **Ramificaciones:**
 
 - Si el Reviewer rechaza el trabajo: `review → changes_requested`. El Leader relanza al Implementer y el Work Item vuelve a `in_progress`.

@@ -1,5 +1,7 @@
 # Arquitectura
 
+> **Documento del proyecto** — personaliza este archivo al adaptar el harness a tu repositorio.
+>
 > Este documento define las decisiones arquitectónicas del proyecto.
 > El Implementer debe respetarlas durante la implementación y el Reviewer las utilizará como criterio de validación.
 

@@ -4,6 +4,12 @@
 #
 # Inicializa y verifica el Harness antes de comenzar una sesión.
 #
+# Ejecución recomendada (no requiere permisos de ejecución):
+#   bash init.sh
+#
+# Alternativa, si el script tiene permiso de ejecución:
+#   chmod +x init.sh && ./init.sh
+#
 # Si algún elemento crítico del Harness falta, la sesión no debe comenzar.
 #
 
@@ -35,13 +41,13 @@ REQUIRED_FILES=(
     "AGENTS.md"
     "README.md"
 
-    "docs/workflow.md"
-    "docs/specs.md"
-    "docs/meta.md"
-    "docs/progress.md"
-    "docs/architecture.md"
-    "docs/conventions.md"
-    "docs/verification.md"
+    "docs/harness/workflow.md"
+    "docs/harness/specs.md"
+    "docs/harness/meta.md"
+    "docs/harness/progress.md"
+    "docs/project/architecture.md"
+    "docs/project/conventions.md"
+    "docs/project/verification.md"
 
     "agents/leader.md"
     "agents/spec_author.md"
@@ -77,7 +83,7 @@ ok "progress/"
 
 CURRENT_FILE="progress/current.md"
 
-# Plantilla definida en docs/progress.md — si la modificas ahí, actualiza también este heredoc.
+# Plantilla definida en docs/harness/progress.md — si la modificas ahí, actualiza también este heredoc.
 if [[ ! -f "$CURRENT_FILE" ]]; then
 cat > "$CURRENT_FILE" <<'EOF'
 # Sesión actual
@@ -113,7 +119,7 @@ fi
 
 HISTORY_FILE="progress/history.md"
 
-# Plantilla definida en docs/progress.md — si la modificas ahí, actualiza también este heredoc.
+# Plantilla definida en docs/harness/progress.md — si la modificas ahí, actualiza también este heredoc.
 if [[ ! -f "$HISTORY_FILE" ]]; then
 cat > "$HISTORY_FILE" <<'EOF'
 # Bitácora histórica (append-only)
@@ -142,7 +148,7 @@ echo "── 3. Validando invariantes ──────────────
 #
 # progress/current.md es el único archivo que representa la sesión activa.
 # Por diseño (AGENTS.md §9: "trabaja sobre un único Work Item por sesión"),
-# la regla de docs/workflow.md ("solo un Work Item en in_progress") queda
+# la regla de docs/harness/workflow.md ("solo un Work Item en in_progress") queda
 # garantizada por esta misma estructura: basta con leer este único archivo,
 # no es necesario escanear specs/*/meta.json.
 if grep -q "_ninguno_" "$CURRENT_FILE"; then
@@ -161,7 +167,7 @@ echo
 echo "── 4. Verificando proyecto ───────────────"
 
 echo "[INFO] Personaliza esta sección según tu proyecto."
-echo "[INFO] Los comandos deben coincidir con docs/verification.md."
+echo "[INFO] Los comandos deben coincidir con docs/project/verification.md."
 
 # Usa run_check para que cualquier fallo se propague correctamente a $EXIT_CODE.
 # El Reviewer exige que init.sh finalice sin errores antes de aprobar un Work Item,

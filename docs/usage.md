@@ -21,13 +21,51 @@ Ninguna de las dos es un trámite. Son los dos puntos donde el proceso se detien
 # 1. Primera vez en el repositorio
 
 1. Copia los archivos del harness (`AGENTS.md`, `docs/`, `agents/`, `init.sh`) dentro de tu proyecto.
-2. Ejecuta:
+2. **Personaliza la documentación de tu proyecto** (ver Sección 1.1).
+3. Ejecuta:
    ```bash
-   ./init.sh
+   bash init.sh
    ```
-3. El script verificará que el harness esté completo y preparará las carpetas `specs/` y `progress/` si no existen todavía.
+4. El script verificará que el harness esté completo y preparará las carpetas `specs/` y `progress/` si no existen todavía.
 
 Si `init.sh` reporta `[FAIL]`, falta algún archivo del harness — revisa el listado que imprime antes de continuar. No inicies trabajo hasta que el resumen final diga "Harness listo para trabajar".
+
+### Permisos de ejecución
+
+Al copiar el harness, `init.sh` puede no tener permiso de ejecución. En ese caso `./init.sh` fallará con "Permiso denegado".
+
+Usa siempre `bash init.sh` — funciona sin permisos de ejecución. Si prefieres `./init.sh`, otórgalo una vez:
+
+```bash
+chmod +x init.sh
+```
+
+---
+
+## 1.1 Qué personalizar y qué no
+
+La documentación en `docs/` está dividida en dos carpetas. Solo una de ellas debes adaptarla a tu proyecto.
+
+### Personaliza (documentación del proyecto)
+
+| Archivo | Qué debes definir |
+|---------|-------------------|
+| `docs/project/architecture.md` | Decisiones arquitectónicas de tu repositorio. |
+| `docs/project/conventions.md` | Estilo de código y convenciones de desarrollo. |
+| `docs/project/verification.md` | Checkpoints (`V1`, `V2`, ...) y cómo demostrar que el trabajo funciona. |
+| `AGENTS.md` — Sección 2 | Propósito del producto, usuarios, principios y límites. |
+| `AGENTS.md` — Sección 3 | Stack técnico y comandos principales del proyecto. |
+| `init.sh` — Sección 4 | Comandos de verificación (`run_check`) alineados con `verification.md`. |
+
+### No personalices (documentación del harness)
+
+| Carpeta / archivo | Motivo |
+|-------------------|--------|
+| `docs/harness/` | Define el funcionamiento del arnés — es igual en todos los proyectos. |
+| `agents/` | Roles y protocolos de los subagentes. |
+| `docs/usage.md` | Esta guía. |
+
+Si modificas un archivo de `docs/harness/` o `agents/`, estarías alterando el harness en sí, no la configuración de tu proyecto.
 
 ---
 
@@ -39,7 +77,7 @@ Si tu solicitud tiene cualquier ambigüedad de alcance, el Leader **debe** deten
 
 Esta negociación es tu responsabilidad, no un paso automático. El `meta.json` que el Leader crea al final **representa el acuerdo alcanzado contigo** — es tu criterio quedando registrado, no una decisión que el agente tomó solo. Vale la pena tomarte este paso en serio: cuanto más claro quede el acuerdo aquí, menos ambigüedad tendrá que resolver el Spec Author después.
 
-Solo una vez que existe ese acuerdo explícito, el Leader crea el Work Item (`specs/<work-item>/meta.json`) con estado `pending` y decide si corresponde a una Feature o una Task (ver `docs/workflow.md`).
+Solo una vez que existe ese acuerdo explícito, el Leader crea el Work Item (`specs/<work-item>/meta.json`) con estado `pending` y decide si corresponde a una Feature o una Task (ver `docs/harness/workflow.md`).
 
 ---
 
@@ -56,7 +94,7 @@ En la práctica, esto es lo que vas a ver:
 1. **Planificación.** El Leader delega en el Spec Author, que redacta la planificación (`requirements.md` + `design.md` + `tasks.md` para una Feature, o `plan.md` para una Task) dentro de `specs/<work-item>/`.
 2. **Tu aprobación.** El Leader se detiene y te pide revisar la planificación. Esto **nunca se salta** — es el punto donde tienes control total antes de que se escriba una sola línea de código.
 3. **Implementación.** Solo después de tu aprobación explícita, el Implementer ejecuta la planificación tal como fue aprobada.
-4. **Revisión.** El Reviewer valida el trabajo contra la planificación y los checkpoints de `docs/verification.md`.
+4. **Revisión.** El Reviewer valida el trabajo contra la planificación y los checkpoints de `docs/project/verification.md`.
 5. **Finalización.** Si todo pasa, el Work Item queda `done` y su resumen se archiva en `progress/history.md`.
 
 ---
@@ -78,14 +116,17 @@ Lo mismo aplica después de la revisión: si el Reviewer rechaza el trabajo (`ch
 
 Si cierras la conversación con un Work Item a medias, no se pierde nada — vive en `specs/` y `progress/`, no en el historial del chat.
 
-La próxima vez que ejecutes `./init.sh` y hables con el agente, el Leader leerá `progress/current.md` y `specs/*/meta.json`, y te preguntará si quieres continuar, reiniciar o cancelar ese Work Item. Tú decides; el Leader nunca lo asume por su cuenta.
+La próxima vez que ejecutes `bash init.sh` y hables con el agente, el Leader leerá `progress/current.md` y `specs/*/meta.json`, y te preguntará si quieres continuar, reiniciar o cancelar ese Work Item. Tú decides; el Leader nunca lo asume por su cuenta.
 
 ---
 
 # 6. Preguntas frecuentes
 
 **¿Puedo tener varios Work Items en paralelo?**
-No al mismo tiempo en estado `in_progress` — el harness solo permite uno activo a la vez (ver `docs/workflow.md`). Sí puedes tener varios `pending` esperando su turno.
+No al mismo tiempo en estado `in_progress` — el harness solo permite uno activo a la vez (ver `docs/harness/workflow.md`). Sí puedes tener varios `pending` esperando su turno.
+
+**¿Qué hago si `./init.sh` dice "Permiso denegado"?**
+Usa `bash init.sh` en su lugar, o ejecuta `chmod +x init.sh` una vez y vuelve a intentar con `./init.sh`.
 
 **¿Qué hago si `init.sh` falla en la Sección 4 (verificación del proyecto)?**
 Significa que algún comando del proyecto (tests, build, lint) falló. Revisa el detalle en el resumen final del script y corrige antes de solicitar revisión de un Work Item.
@@ -94,4 +135,4 @@ Significa que algún comando del proyecto (tests, build, lint) falló. Revisa el
 En `progress/history.md` — es un registro permanente, nunca se sobrescribe.
 
 **¿Necesito leer toda la documentación de `docs/` para usar el harness?**
-No. Esta guía es suficiente para el uso diario. `docs/` está pensado para que los *agentes* carguen solo lo necesario según la etapa — como humano, solo necesitas consultarlo si quieres entender el detalle de alguna regla.
+No. Esta guía es suficiente para el uso diario. Los agentes cargan solo lo necesario según la etapa — como humano, consulta `docs/project/` si quieres revisar las reglas de tu proyecto, o `docs/harness/` si quieres entender el detalle del arnés.

@@ -109,7 +109,7 @@ Formato recomendado:
 - [ ] T3 — ...
 ```
 
-El Implementer marcará cada tarea como completada durante la implementación.
+El Implementer marcará cada tarea como completada (`[x]`) en `tasks.md` **inmediatamente** al terminarla, antes de continuar con la siguiente.
 
 ---
 
@@ -177,5 +177,5 @@ Solo después de esa aprobación el Work Item puede pasar a `in_progress`.
 - Todo Work Item comienza en estado `pending`.
 - Todo Work Item debe pasar por el Spec Author.
 - Ningún Work Item puede implementarse sin planificación aprobada.
-- El Implementer nunca modifica la planificación.
+- El Implementer nunca modifica la planificación, salvo marcar tareas o pasos como completados en `tasks.md` o `plan.md`.
 - El Reviewer verifica la implementación contra la planificación aprobada.
